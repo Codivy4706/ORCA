@@ -1,0 +1,37 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/orca_db
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: ${POSTGRES_PASSWORD}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+
+  ai:
+    google:
+      genai:
+        api-key: ${GEMINI_API_KEY:REPLACE_ME}
+        chat:
+          options:
+            model: gemini-2.5-flash
+            
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes: 
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      targetApi: 
+        slidingWindowSize: 5 
+        failureRateThreshold: 50 
+        waitDurationInOpenState: 15s 
+        permittedNumberOfCallsInHalfOpenState: 2 
+        minimumNumberOfCalls: 3

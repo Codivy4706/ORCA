@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Post Payload Schema",
+  "type": "object",
+  "properties": {
+    "userId": { "type": "integer" },
+    "id": { "type": "integer" },
+    "title": { "type": "string" },
+    "body": { "type": "string" },
+    "ORCA_SECRET_FIELD": { "type": "string" }
+  },
+  "required": ["userId", "id", "title", "body", "ORCA_SECRET_FIELD"],
+  "additionalProperties": true
+}

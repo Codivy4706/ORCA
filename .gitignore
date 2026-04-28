@@ -1,0 +1,43 @@
+# =========================
+# Root Files to Ignore
+# =========================
+Checklist.txt
+desktop.ini
+*.png
+*.ico
+*.webp
+*.jpg
+*.jpeg
+
+# Environment Variables (CRITICAL)
+.env
+.env.*
+*.local
+
+# =========================
+# orca-api (Java / Spring Boot)
+# =========================
+orca-api/target/
+orca-api/log/
+orca-api/logs/
+orca-api/**/*.log
+
+# =========================
+# orca-frontend (Next.js / Node)
+# =========================
+orca-frontend/node_modules/
+orca-frontend/.next/
+orca-frontend/out/
+orca-frontend/build/
+orca-frontend/.vercel/
+orca-frontend/npm-debug.log*
+orca-frontend/yarn-debug.log*
+orca-frontend/yarn-error.log*
+
+# =========================
+# IDEs and OS Files
+# =========================
+.vscode/
+.idea/
+*.iml
+.DS_Store
