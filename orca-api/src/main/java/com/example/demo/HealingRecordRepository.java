@@ -9,4 +9,7 @@ import com.example.demo.models.HealingRecord;
 @Repository
 public interface HealingRecordRepository extends JpaRepository<HealingRecord, Long> {
     List<HealingRecord> findByProjectName(String projectName);
+    
 }
+
+

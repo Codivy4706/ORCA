@@ -17,6 +17,8 @@ public class HealingRecord {
     private String projectName; 
     private String status = "AUTO_PATCHED"; 
     
+    private Long latency;
+    
     @Column(columnDefinition = "TEXT")
     private String detectedDrift;
     
