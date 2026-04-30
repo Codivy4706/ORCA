@@ -1,30 +1,25 @@
 server:
-  port: 8080
+  port: ${PORT:8080} 
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/orca_db
+    url: ${SPRING_DATASOURCE_URL}
     driver-class-name: org.postgresql.Driver
-    username: postgres
-    password: ${POSTGRES_PASSWORD}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
+    show-sql: false 
 
   ai:
     google:
       genai:
-        api-key: ${GEMINI_API_KEY:REPLACE_ME}
+        api-key: ${GEMINI_API_KEY}
         chat:
           options:
-            model: gemini-2.5-flash
-            
-  cloud:
-    gateway:
-      server:
-        webflux:
-          routes: 
+            model: gemini-1.5-flash 
 
 resilience4j:
   circuitbreaker:
