@@ -317,18 +317,21 @@ export default function Dashboard() {
     if (!cleanToken) return
 
     try {
-      const surgeryRes = await fetch(`http://localhost:8080/api/metrics?projectId=${projectId}`, {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+
+      const surgeryRes = await fetch(`${baseUrl}/api/metrics?projectId=${projectId}`, {
         headers: { 'Authorization': `Bearer ${cleanToken}` }
       })
       if (surgeryRes.ok) setHealingRecords(await surgeryRes.json())
 
-      const trafficRes = await fetch(`http://localhost:8080/api/orca/traffic`, {
+      const trafficRes = await fetch(`${baseUrl}/api/orca/traffic`, {
         headers: { 'Authorization': `Bearer ${cleanToken}` }
       })
       if (trafficRes.ok) setLiveTraffic(await trafficRes.json())
     } catch (err) {}
-  }
+  } // <--- Added the missing closing brace here
 
+  // 2. Now call hooks at the top level
   useEffect(() => {
     if (projectId) {
       fetchRecords()
@@ -344,9 +347,11 @@ export default function Dashboard() {
       if (!cleanToken) return router.push("/login")
 
       try {
-        const response = await fetch(`http://localhost:8080/api/orca/stats?projectId=${projectId}`, {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+        const response = await fetch(`${baseUrl}/api/orca/stats?projectId=${projectId}`, {
           headers: { 'Authorization': `Bearer ${cleanToken}` }
         })
+        
         if (response.status === 401) return
         if (response.ok) {
           const data = await response.json()
@@ -361,11 +366,14 @@ export default function Dashboard() {
     const rawToken = localStorage.getItem("orca_token") || ""
     const cleanToken = rawToken.replace(/^"|"$/g, '').trim()
     if (!cleanToken) return
+    
     try {
-      const response = await fetch(`http://localhost:8080/api/surgeries/${id}/revert`, {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+      const response = await fetch(`${baseUrl}/api/surgeries/${id}/revert`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${cleanToken}` }
       })
+      
       if (response.ok) {
         setHealingRecords((records) => records.map((r) => (r.id === id ? { ...r, status: "REJECTED_BY_DEV" } : r)))
       }
@@ -414,11 +422,9 @@ export default function Dashboard() {
     })
 
     const [startTime, endTime] = chartDomain;
-
     return Object.values(buckets)
       .filter(b => b.timestamp >= startTime && b.timestamp <= endTime)
       .sort((a, b) => a.timestamp - b.timestamp)
-      
   }, [liveTraffic, healingRecords, chartDomain]) 
 
   return (

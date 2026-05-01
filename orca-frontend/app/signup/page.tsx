@@ -6,6 +6,8 @@ import Link from 'next/link'
 import { Mail, Lock, User, Chrome, ArrowRight } from 'lucide-react'
 import { AuthCard } from '@/components/auth-card'
 
+const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+
 export default function SignupPage() {
   const router = useRouter()
 
@@ -35,17 +37,11 @@ export default function SignupPage() {
     setIsLoading(true)
     
     try {
-      const res = await fetch('http://localhost:8080/api/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          fullName,
-          email,
-          password
-        }),
-      })
+        const res = await fetch(`${baseUrl}/api/auth/signup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fullName, email, password }),
+        });
 
       const data = await res.json()
 

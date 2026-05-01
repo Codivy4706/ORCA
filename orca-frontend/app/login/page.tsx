@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation'
 import { Mail, Lock, Chrome, ArrowRight } from 'lucide-react'
 import { AuthCard } from '@/components/auth-card'
 
+const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+
 export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
@@ -19,10 +21,9 @@ export default function LoginPage() {
     setError('') 
 
     try {
-      const res = await fetch("http://localhost:8080/api/auth/login", {
+      const res = await fetch(`${baseUrl}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // Map the 'email' input to the 'username' key our Spring Boot backend expects
         body: JSON.stringify({ username: email, password: password }),
       });
 

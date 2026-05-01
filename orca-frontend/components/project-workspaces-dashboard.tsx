@@ -35,12 +35,12 @@ export function ProjectWorkspacesDashboard() {
         setLoading(true)
         const token = localStorage.getItem("orca_token") 
 
-        const response = await fetch('http://localhost:8080/api/projects', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/projects`, {
           headers: {
-            'Authorization': `Bearer ${token}` ,
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
-        })
+        });
         
         if (!response.ok) throw new Error('Failed to fetch projects')
         const result = await response.json()
@@ -76,14 +76,14 @@ export function ProjectWorkspacesDashboard() {
       setIsCreating(true)
       const token = localStorage.getItem("orca_token") 
 
-      const response = await fetch('http://localhost:8080/api/projects', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/projects`, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ name: projectName }),
-      })
+      });
 
       if (!response.ok) throw new Error('Failed to create project')
       const result = await response.json()
