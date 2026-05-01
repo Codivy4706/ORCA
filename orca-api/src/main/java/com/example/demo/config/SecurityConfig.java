@@ -49,7 +49,6 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         
-        // CHANGE THIS: Add your Vercel URL and keep localhost for testing
         config.setAllowedOrigins(List.of(
             "http://localhost:3000", 
             "https://orca-teal-eight.vercel.app"
