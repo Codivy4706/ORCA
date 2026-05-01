@@ -15,10 +15,10 @@ public class CorsConfig {
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
         
-        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        // ALLOW VERCEL AND LOCALHOST
+        corsConfig.setAllowedOriginPatterns(Arrays.asList("https://*.vercel.app", "http://localhost:3000"));
         
         corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
-        
         corsConfig.setAllowedHeaders(Arrays.asList("*"));
         corsConfig.setAllowCredentials(true);
         corsConfig.setMaxAge(8000L); // Cache the preflight request
