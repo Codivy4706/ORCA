@@ -25,23 +25,22 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
+            // 1. MUST BE FIRST: Disable CSRF and enable CORS
             .csrf(ServerHttpSecurity.CsrfSpec::disable)
-            // This points directly to the bean below
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             
+            // 2. DISABLE ALL DEFAULT BOUNCERS
             .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
             .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
             .logout(ServerHttpSecurity.LogoutSpec::disable)
 
+            // 3. ALLOW EVERYTHING FOR NOW TO PROVE IT WORKS
             .authorizeExchange(exchanges -> exchanges
-                .pathMatchers(HttpMethod.OPTIONS).permitAll() 
+                .pathMatchers(HttpMethod.OPTIONS).permitAll() // Crucial for Preflight
                 .pathMatchers("/api/auth/**").permitAll()   
-                .pathMatchers("/api/orca/**").authenticated() 
-                .pathMatchers("/api/metrics/**").authenticated()
-                .pathMatchers("/api/surgeries/**").authenticated()
-                .pathMatchers("/api/projects/**").authenticated()
-                .anyExchange().permitAll()
+                .anyExchange().permitAll() // Temporarily open everything to test
             )
+            // Ensure the filter is only active for authenticated routes
             .addFilterAt(jwtAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
             .build();
     }
@@ -50,17 +49,11 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         
-        // USE PATTERNS SO VERCEL PREVIEW URLS WORK
-        config.setAllowedOriginPatterns(List.of(
-            "http://localhost:3000", 
-            "https://*.vercel.app"
-        )); 
-        
+        // allow all for testing - we will tighten this later
+        config.setAllowedOriginPatterns(List.of("*")); 
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
-        // ALLOW ALL HEADERS so preflight doesn't get blocked missing something
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
-        config.setMaxAge(8000L);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
