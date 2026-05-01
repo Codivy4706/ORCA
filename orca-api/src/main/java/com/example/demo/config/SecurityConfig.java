@@ -26,6 +26,7 @@ public class SecurityConfig {
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
             .csrf(ServerHttpSecurity.CsrfSpec::disable)
+            // This points directly to the bean below
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             
             .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
@@ -49,14 +50,17 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         
-        config.setAllowedOrigins(List.of(
+        // USE PATTERNS SO VERCEL PREVIEW URLS WORK
+        config.setAllowedOriginPatterns(List.of(
             "http://localhost:3000", 
-            "https://orca-teal-eight.vercel.app"
+            "https://*.vercel.app"
         )); 
         
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
+        // ALLOW ALL HEADERS so preflight doesn't get blocked missing something
+        config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
+        config.setMaxAge(8000L);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
